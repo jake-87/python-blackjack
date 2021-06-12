@@ -39,7 +39,7 @@ class deck:
     def reset(self): # Reset what cards can be gotten from getcard()
         self.check = self.cards
 class player: # The class for the player, contains an array for a hand of cards, and a money counter
-    cards = [0 for i in range(52)]
+    cards = [-1 for i in range(52)]
     money = 0
     cardcount = 0
     ai = False    
@@ -56,14 +56,14 @@ class player: # The class for the player, contains an array for a hand of cards,
     def addcard(self, card): # Add card to hand
         self.cards[self.cardcount] = card
         self.cardcount += 1
-    
     def printhand(self): # Print hand
-        print(self.cards)
-    
+        for i in range(52):
+            if self.cards[i] == -1:
+                continue
+            print(str(self.cards[i] + 1) + ",", end = '')
     def resethand(self): # Reset hand
-        self.cards = [0 for i in range(52)]
-        self.cardcount = 0
-    
+        self.cards = [-1 for i in range(52)]
+        self.cardcount = 0 
     def reset(self): # Reset player
         self.resethand()
         self.money = 0

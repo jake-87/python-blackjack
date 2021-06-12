@@ -5,10 +5,10 @@ import array
 def customsumas11(nums):
     tmp = nums
     for i in range(len(nums)):
-        if tmp[i] > 10:
+        if tmp[i] > 9:
+            tmp[i] = 9
+        if tmp[i] == 0:
             tmp[i] = 10
-        if tmp[i] == 1:
-            tmp[i] = 11
     total = 0
     for i in range(len(tmp)):
         total += tmp[i]
@@ -16,34 +16,38 @@ def customsumas11(nums):
 def customsumas1(nums):
     tmp = nums
     for i in range(len(nums)):
-        if tmp[i] > 10:
-            tmp[i] = 10
+        if tmp[i] > 9:
+            tmp[i] = 9
     total = 0
     for i in range(len(tmp)):
-        total += tmp[i]
+        total += tmp[i] + 1
     return total
 def customsum(nums):
     tmp = nums
     for i in range(len(nums)):
-        if tmp[i] > 10:
-            tmp[i] = 10
+        if tmp[i] > 9:
+            tmp[i] = 9
     for i in range(len(tmp)):
-        if tmp[i] == 1:
+        if tmp[i] == 0:
             print("Do you want this 1 to be one or eleven?")
             print("Total if one is " + str(sum(tmp)) + ", eleven is " + str(sum(tmp) + 10))
             x = input(" >>> ")
-            if int(x) == 11:
-                tmp[i] = 11
+            if int(x) == 1:
+                tmp[i] = 10
     total = 0
     for i in range(len(tmp)):
-        total += tmp[i]
+        if tmp[i] == -1:
+            continue
+        total += tmp[i] + 1
     return total
 def playerturn(p1,  deck, rn):
     print(" Your turn - round " + str(rn) + ", your have been delt is")
     p1.addcard(deck.getcard())
     p1.addcard(deck.getcard())
     p1.printhand()
+    playerresult = [0,0]
     while 1:
+        print(" ")
         print("Hit or pass? (h/p)")
         hp = input(" >>> ")
         if hp == 'p':
@@ -62,17 +66,17 @@ def aiturn(pai, ainum, deck, roundnum):
     for i in range(int(ainum)):
         pai[i].addcard(deck.getcard())
         pai[i].addcard(deck.getcard())
-        if customsumas11(pai[1].cards) == 21:
+        if customsumas11(pai[i].cards) == 21:
             airesults[i] = 21
             
         else:
-            x = customsumas1(pai[1].cards)
+            x = customsumas1(pai[i].cards)
             while x < 16:
                 pai[i].addcard(deck.getcard())
-                x = customsumas1(pai[1].cards)
+                x = customsumas1(pai[i].cards)
             if x == 16 or 17:
                 pai[i].addcard(deck.getcard())
-            airesults[i] = customsumas1(pai[1].cards)
+            airesults[i] = customsumas1(pai[i].cards)
     return airesults
 def m():
     p1 = player(0,False)
@@ -89,5 +93,9 @@ def m():
     for roundnum in range(int(rounds)):
         d.reset()
         presult = playerturn(p1, d, roundnum)
+        p1.resethand()
         airesult = aiturn(pai, x, d, roundnum)
-if __name__ == "__main__": m()
+        for i in range(int(x)):
+            pai[i].resethand()
+if __name__ == "__main__":
+    m()
