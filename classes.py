@@ -3,8 +3,8 @@
 import random
 import array
 class deck:
-    cards = [[0 for i in range(0,4)] for j in range(0,13)]
-    
+    cards = [[0 for i in range(0,14)] for j in range(0,14)]
+    check = [[0 for i in range(0,14)] for j in range(0,14)]
     def __init__(self): # Init card array with 4 suites of 13 cards
         for i in range(0,4):
             for j in range(0,13):
@@ -29,15 +29,18 @@ class deck:
                 suite = -1
                 sarr.remove(s)
         if suite == -1:
-            return -1
-        for i in range(0,13):
-            if self.check[i] == suite:
-                self.check[i].remove(card)
-                break
+            print(self.check)
+            self.reset()
+            print("after reset" + str(self.check))
+            return self.getcard()
+        self.check[s].remove(card)
         return(card)    
     
     def reset(self): # Reset what cards can be gotten from getcard()
-        self.check = self.cards
+        for i in range(0,4):
+            for j in range(0,13):
+                self.cards[j][i] = j
+                self.check = self.cards
 class player: # The class for the player, contains an array for a hand of cards, and a money counter
     cards = [-1 for i in range(52)]
     money = 0
@@ -54,6 +57,7 @@ class player: # The class for the player, contains an array for a hand of cards,
         self.money -= money
     
     def addcard(self, card): # Add card to hand
+        print("CARDCOUNT is " + str(self.cardcount))
         self.cards[self.cardcount] = card
         self.cardcount += 1
     def printhand(self): # Print hand

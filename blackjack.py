@@ -2,18 +2,18 @@
 from classes import *
 import random
 import array
+import time
 def customsumas11(nums):
     tmp = nums
     for i in range(len(nums)):
         if tmp[i] > 9:
             tmp[i] = 9
         if tmp[i] == 0:
-            tmp[i] = 10
+            tmp[i] = 11
     total = 0
     for i in range(len(tmp)):
-        if tmp[i] == -1:
-            continue
-        total += tmp[i]
+        total += tmp[i] + 1
+    print("total is " + str(total) + " tmp is " + str(tmp))
     return total
 def customsumas1(nums):
     tmp = nums
@@ -22,9 +22,8 @@ def customsumas1(nums):
             tmp[i] = 9
     total = 0
     for i in range(len(tmp)):
-        if tmp[i] == -1:
-            continue
         total += tmp[i] + 1
+    print("1 : total is " + str(total) + " tmp is " + str(tmp))
     return total
 def customsum(nums):
     if customsumas11(nums) > 21:
@@ -41,6 +40,7 @@ def playerturn(p1,  deck, rn):
     print("Sum is " + str(customsum(p1.cards)))
     playerresult = [0,0]
     while 1:
+        time.sleep(2)
         print(" ")
         print("How many moneys do you want to bet? You have " + str(p1.money))
         pbet = input(" >>> ")
@@ -51,6 +51,7 @@ def playerturn(p1,  deck, rn):
     p1.submoney(int(pbet))
     playerresult[1] = int(pbet)
     while 1:
+        time.sleep(2)
         print(" ")
         print("Hit or pass? (h/p)")
         hp = input(" >>> ")
@@ -61,6 +62,7 @@ def playerturn(p1,  deck, rn):
             if customsum(p1.cards) > 21:
                 print("You went over!")
                 break
+            time.sleep(2)
             print("Your hand:")
             p1.printhand()
             print("Sum is " + str(customsum(p1.cards)))
@@ -69,6 +71,7 @@ def playerturn(p1,  deck, rn):
 def aiturn(pai, ainum, deck, roundnum):
     airesults = [0 for i in range(int(ainum))]
     for i in range(int(ainum)):
+        print("AINUM is " + str(i))
         pai[i].addcard(deck.getcard())
         pai[i].addcard(deck.getcard())
         if customsumas11(pai[i].cards) == 21:
@@ -101,6 +104,8 @@ def m():
         d.reset()
         presult = playerturn(p1, d, roundnum)
         p1.resethand()
+        print("AI is thinking...")
+        time.sleep(2)
         airesult = aiturn(pai, x, d, roundnum)
         for i in range(int(x)):
             pai[i].resethand()
@@ -109,14 +114,22 @@ def m():
         for i in range(int(x)):
             if presult[0] < airesult[i] or presult[0] > 21:
                 win = False
+        time.sleep(2)
         if win ==  True:
-            y = int(random.randint(1,10) * int(x) / random.randint(1,10) * presult[1] / int(x))
+            y = int(random.randint(1,10) * int(x) / random.randint(1,10) * presult[1] / int(x)) + presult[1]
             print("You won round " + str(roundnum) + "! You won " + str(y) + " moneys.")
             p1.addmoney(int(y))
         else:
             print("You lost round " + str(roundnum) + ".")
             if p1.money == 0:
-                print("You went broke! You loose!")
-                return 0
+                print("You went broke! You have no moneys left! Do you want a small loan to keep going? (y/n)")
+                loan = input(" >>> ")
+                if loan == 'y':
+                    p1.addmoney(10)
+                else:
+                    break
+        time.sleep(2)
+    print("Bye!")
+    return 0
 if __name__ == "__main__":
     m()
