@@ -11,6 +11,8 @@ def customsumas11(nums):
             tmp[i] = 10
     total = 0
     for i in range(len(tmp)):
+        if tmp[i] == -1:
+            continue
         total += tmp[i]
     return total
 def customsumas1(nums):
@@ -20,6 +22,8 @@ def customsumas1(nums):
             tmp[i] = 9
     total = 0
     for i in range(len(tmp)):
+        if tmp[i] == -1:
+            continue
         total += tmp[i] + 1
     return total
 def customsum(nums):
@@ -29,11 +33,12 @@ def customsum(nums):
         total = customsumas11(nums)
     return total
 def playerturn(p1,  deck, rn):
-    print(p1.money)
     print(" Your turn - round " + str(rn) + ", your have been delt is")
     p1.addcard(deck.getcard())
     p1.addcard(deck.getcard())
     p1.printhand()
+    print(" ")
+    print("Sum is " + str(customsum(p1.cards)))
     playerresult = [0,0]
     while 1:
         print(" ")
@@ -58,6 +63,7 @@ def playerturn(p1,  deck, rn):
                 break
             print("Your hand:")
             p1.printhand()
+            print("Sum is " + str(customsum(p1.cards)))
     playerresult[0] = customsum(p1.cards)
     return playerresult
 def aiturn(pai, ainum, deck, roundnum):
@@ -99,15 +105,16 @@ def m():
         for i in range(int(x)):
             pai[i].resethand()
         win = True
-        print("AI is " +  str(airesult))
+        print("AI's results are " +  str(airesult) + ", 0 means they went over")
         for i in range(int(x)):
             if presult[0] < airesult[i] or presult[0] > 21:
                 win = False
         if win ==  True:
-            y = random.randint(0,10) * int(x) * presult[1]
+            y = int(random.randint(1,10) * int(x) / random.randint(1,10) * presult[1] / int(x))
             print("You won round " + str(roundnum) + "! You won " + str(y) + " moneys.")
             p1.addmoney(int(y))
         else:
+            print("You lost round " + str(roundnum) + ".")
             if p1.money == 0:
                 print("You went broke! You loose!")
                 return 0
