@@ -3,49 +3,34 @@
 import random
 import array
 class deck:
-    cards = [[0 for i in range(0,14)] for j in range(0,14)]
-    check = [[0 for i in range(0,14)] for j in range(0,14)]
+    debug = 0
+    cards = [0 for i in range (52)]
     def __init__(self): # Init card array with 4 suites of 13 cards
         for i in range(0,4):
-            for j in range(0,13):
-                self.cards[j][i] = j
-                self.check = self.cards 
-    
+            for j in range(1,13):
+                self.cards[(i * 13) + j - 1] = j
     def print(self): # Print card array
-        for i in range(0,4):
-            for j in range(0,13):
-                print("Card index " + str(i) + ' ' + str(j) + ":  ", end = '')
-                print(self.check[j][i])
-    
+        for i in range(52):
+            if self.cards[i] == -1:
+                continue
     def getcard(self): # Get a card, eliminating that card from the possible cards
-        sarr = [0,1,2,3,4,5,6,7,8,9,10,11,12]
-        for i in range(0,13):
-            s = random.choice(sarr)
-            suite = self.check[s]
-            if suite:
-                card = random.choice(suite)
-                break
-            else:
-                suite = -1
-                sarr.remove(s)
-        if suite == -1:
-            print(self.check)
-            self.reset()
-            print("after reset" + str(self.check))
-            return self.getcard()
-        self.check[s].remove(card)
-        return(card)    
-    
+        if self.debug: print("IN GETCARD" + str(self.cards))
+        s = random.choice(self.cards)
+        self.cards.remove(s)
+        if self.debug: print("SELECTED " + str(s))
+        return s
     def reset(self): # Reset what cards can be gotten from getcard()
+        self.cards = [0 for i in range(52)]
         for i in range(0,4):
-            for j in range(0,13):
-                self.cards[j][i] = j
-                self.check = self.cards
+            for j in range(1,13):
+                self.cards[(i * 13) + j - 1] = j
+        if self.debug: print("RESETCARDS")
 class player: # The class for the player, contains an array for a hand of cards, and a money counter
     cards = [-1 for i in range(52)]
     money = 0
     cardcount = 0
-    ai = False    
+    ai = False 
+    debug = 0
     def __init__(self, money, ai): # Init new player
         self.money = money
         self.ai = ai
@@ -57,7 +42,6 @@ class player: # The class for the player, contains an array for a hand of cards,
         self.money -= money
     
     def addcard(self, card): # Add card to hand
-        print("CARDCOUNT is " + str(self.cardcount))
         self.cards[self.cardcount] = card
         self.cardcount += 1
     def printhand(self): # Print hand

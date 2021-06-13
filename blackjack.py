@@ -3,8 +3,11 @@ from classes import *
 import random
 import array
 import time
+debug = 0
+ttime = 0
 def customsumas11(nums):
     tmp = nums
+    if debug: print("AS11 : " + str(nums))
     for i in range(len(nums)):
         if tmp[i] > 9:
             tmp[i] = 9
@@ -13,17 +16,16 @@ def customsumas11(nums):
     total = 0
     for i in range(len(tmp)):
         total += tmp[i] + 1
-    print("total is " + str(total) + " tmp is " + str(tmp))
     return total
 def customsumas1(nums):
     tmp = nums
+    if debug: print("AS1 : " + str(nums))
     for i in range(len(nums)):
         if tmp[i] > 9:
             tmp[i] = 9
     total = 0
     for i in range(len(tmp)):
         total += tmp[i] + 1
-    print("1 : total is " + str(total) + " tmp is " + str(tmp))
     return total
 def customsum(nums):
     if customsumas11(nums) > 21:
@@ -40,7 +42,7 @@ def playerturn(p1,  deck, rn):
     print("Sum is " + str(customsum(p1.cards)))
     playerresult = [0,0]
     while 1:
-        time.sleep(2)
+        if ttime == 1: time.sleep(2)
         print(" ")
         print("How many moneys do you want to bet? You have " + str(p1.money))
         pbet = input(" >>> ")
@@ -51,7 +53,7 @@ def playerturn(p1,  deck, rn):
     p1.submoney(int(pbet))
     playerresult[1] = int(pbet)
     while 1:
-        time.sleep(2)
+        if ttime == 1: time.sleep(2)
         print(" ")
         print("Hit or pass? (h/p)")
         hp = input(" >>> ")
@@ -62,7 +64,7 @@ def playerturn(p1,  deck, rn):
             if customsum(p1.cards) > 21:
                 print("You went over!")
                 break
-            time.sleep(2)
+            if ttime == 1: time.sleep(2)
             print("Your hand:")
             p1.printhand()
             print("Sum is " + str(customsum(p1.cards)))
@@ -71,7 +73,7 @@ def playerturn(p1,  deck, rn):
 def aiturn(pai, ainum, deck, roundnum):
     airesults = [0 for i in range(int(ainum))]
     for i in range(int(ainum)):
-        print("AINUM is " + str(i))
+        if debug: print("AINUM is " + str(i))
         pai[i].addcard(deck.getcard())
         pai[i].addcard(deck.getcard())
         if customsumas11(pai[i].cards) == 21:
@@ -79,10 +81,10 @@ def aiturn(pai, ainum, deck, roundnum):
             
         else:
             x = customsumas1(pai[i].cards)
-            while x < 16:
+            while x < 15:
                 pai[i].addcard(deck.getcard())
                 x = customsumas1(pai[i].cards)
-            if x == 16 or 17:
+            if x == 15:
                 pai[i].addcard(deck.getcard())
             airesults[i] = customsumas1(pai[i].cards)
         if customsumas1(pai[i].cards) > 21:
@@ -93,10 +95,16 @@ def m():
     p1.addmoney(20)
     pai = [0 for i in range(10)]
     d = deck()
+    print("Enable Think Time? (1/0) (If in doubt, pick 1)")
+    ttime = input (" >>> ")
+    print("Enable Debug? (1/0) (If in doubt, pick 0)")
+    debug = input (" >>> ")
+    if int(debug) == 1: p1.debug = 1
     print("How many other players do you want? (More than 1, less than 11)")
     x = input(" >>> ")
     for i in range(0,int(x)):
         pai[i] = player(20, True)
+        if debug: pai[i].debug = 1
     print("How many rounds do you want to play? Less is harder.")
     rounds = input(" >>> ")
     print("Your objective is to get " + str((int(x) * 40)) + " moneys to win.")
@@ -105,7 +113,7 @@ def m():
         presult = playerturn(p1, d, roundnum)
         p1.resethand()
         print("AI is thinking...")
-        time.sleep(2)
+        if ttime == 1: time.sleep(2)
         airesult = aiturn(pai, x, d, roundnum)
         for i in range(int(x)):
             pai[i].resethand()
@@ -114,7 +122,7 @@ def m():
         for i in range(int(x)):
             if presult[0] < airesult[i] or presult[0] > 21:
                 win = False
-        time.sleep(2)
+        if ttime == 1: time.sleep(2)
         if win ==  True:
             y = int(random.randint(1,10) * int(x) / random.randint(1,10) * presult[1] / int(x)) + presult[1]
             print("You won round " + str(roundnum) + "! You won " + str(y) + " moneys.")
@@ -128,7 +136,7 @@ def m():
                     p1.addmoney(10)
                 else:
                     break
-        time.sleep(2)
+        if ttime == 1: time.sleep(2)
     print("Bye!")
     return 0
 if __name__ == "__main__":
