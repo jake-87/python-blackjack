@@ -23,29 +23,28 @@ def customsumas1(nums):
         total += tmp[i] + 1
     return total
 def customsum(nums):
-    tmp = nums
-    for i in range(len(nums)):
-        if tmp[i] > 9:
-            tmp[i] = 9
-    for i in range(len(tmp)):
-        if tmp[i] == 0:
-            print("Do you want this 1 to be one or eleven?")
-            print("Total if one is " + str(sum(tmp)) + ", eleven is " + str(sum(tmp) + 10))
-            x = input(" >>> ")
-            if int(x) == 1:
-                tmp[i] = 10
-    total = 0
-    for i in range(len(tmp)):
-        if tmp[i] == -1:
-            continue
-        total += tmp[i] + 1
+    if customsumas11(nums) > 21:
+        total = customsumas1(nums)
+    else:
+        total = customsumas11(nums)
     return total
 def playerturn(p1,  deck, rn):
+    print(p1.money)
     print(" Your turn - round " + str(rn) + ", your have been delt is")
     p1.addcard(deck.getcard())
     p1.addcard(deck.getcard())
     p1.printhand()
     playerresult = [0,0]
+    while 1:
+        print(" ")
+        print("How many moneys do you want to bet? You have " + str(p1.money))
+        pbet = input(" >>> ")
+        if int(pbet) <= p1.money:
+            break
+        else:
+            print("Too much money!")
+    p1.submoney(int(pbet))
+    playerresult[1] = int(pbet)
     while 1:
         print(" ")
         print("Hit or pass? (h/p)")
@@ -59,7 +58,7 @@ def playerturn(p1,  deck, rn):
                 break
             print("Your hand:")
             p1.printhand()
-    playerresult = customsum(p1.cards)
+    playerresult[0] = customsum(p1.cards)
     return playerresult
 def aiturn(pai, ainum, deck, roundnum):
     airesults = [0 for i in range(int(ainum))]
@@ -77,6 +76,8 @@ def aiturn(pai, ainum, deck, roundnum):
             if x == 16 or 17:
                 pai[i].addcard(deck.getcard())
             airesults[i] = customsumas1(pai[i].cards)
+        if customsumas1(pai[i].cards) > 21:
+            airesults[i] = 0
     return airesults
 def m():
     p1 = player(0,False)
@@ -89,7 +90,7 @@ def m():
         pai[i] = player(20, True)
     print("How many rounds do you want to play? Less is harder.")
     rounds = input(" >>> ")
-    print("Your objective is to get " + str((x * 20)) + " moneys to win.")
+    print("Your objective is to get " + str((int(x) * 40)) + " moneys to win.")
     for roundnum in range(int(rounds)):
         d.reset()
         presult = playerturn(p1, d, roundnum)
@@ -97,5 +98,18 @@ def m():
         airesult = aiturn(pai, x, d, roundnum)
         for i in range(int(x)):
             pai[i].resethand()
+        win = True
+        print("AI is " +  str(airesult))
+        for i in range(int(x)):
+            if presult[0] < airesult[i] or presult[0] > 21:
+                win = False
+        if win ==  True:
+            y = random.randint(0,10) * int(x) * presult[1]
+            print("You won round " + str(roundnum) + "! You won " + str(y) + " moneys.")
+            p1.addmoney(int(y))
+        else:
+            if p1.money == 0:
+                print("You went broke! You loose!")
+                return 0
 if __name__ == "__main__":
     m()
