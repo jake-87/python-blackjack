@@ -3,8 +3,8 @@ from classes import *
 import random
 import array
 import time
+from os import system
 debug = 0
-ttime = 0
 def customsumas11(nums):
     tmp = nums
     if debug: print("AS11 : " + str(nums))
@@ -42,9 +42,9 @@ def playerturn(p1,  deck, rn):
     print("Sum is " + str(customsum(p1.cards)))
     playerresult = [0,0]
     while 1:
-        if ttime == 1: time.sleep(2)
+        time.sleep(2)
         print(" ")
-        print("How many moneys do you want to bet? You have " + str(p1.money))
+        print("How many peanuts do you want to bet? You have " + str(p1.money))
         pbet = input(" >>> ")
         if int(pbet) <= p1.money:
             break
@@ -53,7 +53,7 @@ def playerturn(p1,  deck, rn):
     p1.submoney(int(pbet))
     playerresult[1] = int(pbet)
     while 1:
-        if ttime == 1: time.sleep(2)
+        time.sleep(2)
         print(" ")
         print("Hit or pass? (h/p)")
         hp = input(" >>> ")
@@ -64,7 +64,7 @@ def playerturn(p1,  deck, rn):
             if customsum(p1.cards) > 21:
                 print("You went over!")
                 break
-            if ttime == 1: time.sleep(2)
+            time.sleep(2)
             print("Your hand:")
             p1.printhand()
             print("Sum is " + str(customsum(p1.cards)))
@@ -91,12 +91,11 @@ def aiturn(pai, ainum, deck, roundnum):
             airesults[i] = 0
     return airesults
 def m():
+    system("clear")
     p1 = player(0,False)
     p1.addmoney(20)
     pai = [0 for i in range(10)]
     d = deck()
-    print("Enable Think Time? (1/0) (If in doubt, pick 1)")
-    ttime = input (" >>> ")
     print("Enable Debug? (1/0) (If in doubt, pick 0)")
     debug = input (" >>> ")
     if int(debug) == 1: p1.debug = 1
@@ -107,13 +106,15 @@ def m():
         if debug: pai[i].debug = 1
     print("How many rounds do you want to play? Less is harder.")
     rounds = input(" >>> ")
-    print("Your objective is to get " + str((int(x) * 40)) + " moneys to win.")
+    print("Your objective is to get " + str((int(x) * 40)) + " peanuts to win.")
     for roundnum in range(int(rounds)):
+        time.sleep(2)
+        system("clear")
         d.reset()
         presult = playerturn(p1, d, roundnum)
         p1.resethand()
         print("AI is thinking...")
-        if ttime == 1: time.sleep(2)
+        time.sleep(2)
         airesult = aiturn(pai, x, d, roundnum)
         for i in range(int(x)):
             pai[i].resethand()
@@ -122,21 +123,26 @@ def m():
         for i in range(int(x)):
             if presult[0] < airesult[i] or presult[0] > 21:
                 win = False
-        if ttime == 1: time.sleep(2)
+        time.sleep(2)
         if win ==  True:
             y = int(random.randint(1,10) * int(x) / random.randint(1,10) * presult[1] / int(x)) + presult[1]
-            print("You won round " + str(roundnum) + "! You won " + str(y) + " moneys.")
+            print("You won round " + str(roundnum) + "! You won " + str(y) + " peanuts.")
             p1.addmoney(int(y))
         else:
             print("You lost round " + str(roundnum) + ".")
             if p1.money == 0:
-                print("You went broke! You have no moneys left! Do you want a small loan to keep going? (y/n)")
+                print("You went broke! You have no peanuts left! Do you want a small loan to keep going? (y/n)")
                 loan = input(" >>> ")
                 if loan == 'y':
                     p1.addmoney(10)
                 else:
                     break
-        if ttime == 1: time.sleep(2)
+        time.sleep(2)
+    if p1.money > (int(x) * 40):
+        print("You won!")
+    else:
+        print("You lost.")
+    time.sleep(2)
     print("Bye!")
     return 0
 if __name__ == "__main__":
