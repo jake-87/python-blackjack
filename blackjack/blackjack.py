@@ -1,24 +1,28 @@
 #!/usr/bin/env python3
-from blackjack.classes import *
+try:
+    from blackjack.classes import *
+except:
+    from classes import *
 import random
 import array
 import time
 from os import system
+import copy
 debug = 0
 def customsumas11(nums): # Custom sum assuming 11
-    tmp = nums
+    tmp = copy.copy(nums)
     if debug: print("AS11 : " + str(nums))
     for i in range(len(nums)):
         if tmp[i] > 9:
             tmp[i] = 9
-        if tmp[i] == 0:
-            tmp[i] = 11
     total = 0
     for i in range(len(tmp)):
         total += tmp[i] + 1
+        if tmp[i] == 0:
+            total += 10
     return total
 def customsumas1(nums): # Custom sum assuming 1
-    tmp = nums
+    tmp = copy.copy(nums)
     if debug: print("AS1 : " + str(nums))
     for i in range(len(nums)):
         if tmp[i] > 9:
