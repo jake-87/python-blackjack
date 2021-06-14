@@ -45,8 +45,13 @@ def turn(p1, dealer, deck): # Does math and stuff for one turn
     print("\nYou have : ")
     p1.printhand()
     print(" Sum : " + str(customsum(p1.cards)))
-    print("\n How much do you want to bet? You have " + str(p1.money) + " peanuts.")
-    bet = input(" >>> ")
+    while 1:
+        print("\n How much do you want to bet? You have " + str(p1.money) + " peanuts.")
+        bet = input(" >>> ")
+        if bet <= p1.money and bet > 0:
+            break
+        else:
+            print(" Too many/few peanuts!")
     while 1:
         time.sleep(2)
         print("\nYou have : ")
@@ -121,7 +126,7 @@ def m(): # Main function
     print("\nHow many rounds?")
     rounds = input(" >>> ")
     print("Calculating...")
-    time.sleep(int(rounds)) # funni lmao
+    time.sleep(2) # funni lmao
     for i in range(int(rounds)):
         os.system("clear")
         print("Round " + str(i))
